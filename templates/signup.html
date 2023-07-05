@@ -4,15 +4,24 @@
 {% block content %}
 <!-- <img style="width: 70%; height: auto;" src="{{ url_for('static', filename='bg6.jpg') }} "> -->
 
-<form action="#" method="post">
+<form action="#" method="post" style="text-align: center; padding-top: 10%;">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <input type="text" name="username" placeholder="Username"></input>
     <br>
     <input type="password" name="password" placeholder="Password"></input>
     <br>
-    <input type="rpassword" name="rpassword" placeholder="Repeat password"></input>
+    <input type="password" name="rpassword" placeholder="Repeat password"></input>
     <br>
-    <input type="submit" name="submit" value="Log In">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for m in messages %}
+                <P style="color: red">{{m}}</P>
+            {% endfor %} 
+        {% endif %} 
+    {% endwith %}
+    <input type="submit" name="submit" value="Sign Up">
+    <br>
+    <a type="submit" href="{{ '/' }}">Already have account? Log In here!</a>
 </form>
 
 {% endblock %}
