@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Emilia World{% endblock %}
+
+{% block content %}
+<!-- <img style="width: 70%; height: auto;" src="{{ url_for('static', filename='bg6.jpg') }} "> -->
+<h1>Xin chao {{user}}</h1>
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ 'logout' }}" tabindex="-1">Log Out</a>
+</li>
+
+
+{% endblock %}
