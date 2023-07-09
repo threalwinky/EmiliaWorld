@@ -11,7 +11,13 @@
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     {% for m in messages %}
-                        <P style="color: red">{{m}}</P>
+                        {% if m[1] == 1 %}
+                        <script type="text/javascript">
+                            window.alert("{{ m[0] }}")
+                        </script>
+                        {% else %}
+                        <P style="color: red">{{ m }}</P>
+                        {% endif %}
                     {% endfor %}
                 {% endif %}
             {% endwith %}

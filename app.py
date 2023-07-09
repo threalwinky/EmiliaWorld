@@ -96,7 +96,8 @@ def sign_up():
         else :
             flash("The username have been taken", "info")
             return redirect(url_for("sign_up"))
-        flash("Account created! Please log in again")
+        notification = ["Account created! Please log in again", 1]
+        flash(notification)
         return redirect(url_for("log_in"))
     return render_template('signup.html')
 
@@ -132,14 +133,17 @@ def handle_message(message):
     # print(get_message(message))
     send(message, broadcast=True)
     send(get_message(message), broadcast=True)
-@app.route('/app')
-def aichat():
-    return render_template('chat.html')
+@app.route('/general_chat')
+def general_chat():
+    return render_template('general_chat.html')
 
-#Profile Page
-@app.route('/profile')
-def profile():
-    return render_template('profile.html')
+@app.route('/app')
+def emilia_chat():
+    return render_template('emilia_chat.html')
+
+@app.route('/rem_chat')
+def rem_chat():
+    return render_template('rem_chat.html')
 
 #Running website
 if __name__ == "__main__":
