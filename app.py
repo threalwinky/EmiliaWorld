@@ -1,19 +1,23 @@
 #Including libraries and modules
-from flask import Flask, redirect, url_for, render_template, request, session, jsonify
+from flask import *
 from datetime import timedelta
 from flask.helpers import flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, send
-from os import path
+from werkzeug.utils import secure_filename
+from os import *
+import os
 import requests
 import json
 
 #Initing app and database connection
 db = SQLAlchemy()
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "2b3ifbf302f9nc1j2po1jewkajsd"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///user.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SECRET_KEY'] = "2b3ifbf302f9nc1j2po1jewkajsd"
+app.config['UPLOAD_FOLDER'] = 'static/avatars'
+app.config['MAX_CONTENT_LENGTH'] = 1024*1024*10
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///user.db"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.permanent_session_lifetime = timedelta(minutes=10)
 db.init_app(app)
 socketio = SocketIO(app, cors_allowed_origin="*")
@@ -21,13 +25,18 @@ socketio = SocketIO(app, cors_allowed_origin="*")
 #Class of database 
 class User(db.Model):
     user_id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String, unique=True, nullable=True)
+    username = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String)
+    avatar = db.Column(db.String)
+    chat = db.Column(db.String, nullable=True)
     def __init__(self, username, password):
         self.username = username
         self.password = password
+        self.avatar = 'admin.jpg'
+        self.chat = ''
 
-def get_message(message):
+
+def get_simsimi_response(message):
     headers = {
         'Content-Type':'application/x-www-form-urlencoded',
     }
@@ -44,23 +53,19 @@ def get_message(message):
 #Home Page
 @app.route('/', methods=["POST", "GET"])
 def log_in():
+    found_user = User.query.filter_by(username="admin").first()
+    if (found_user == None):
+        user = User("admin", "123")
+        db.session.add(user)
+        db.session.commit()
     if (request.method == "POST"):
         username = request.form["username"]
         password = request.form["password"]
-        if (username == "" or password == "") :
-            flash("Please enter both username and password", "info")
-            return redirect(url_for("log_in"))
-        # print(password)
-        found_user = db.session.execute(
-            db.select(User).where(User.username == username)
-        ).scalar()
-        # print(found_user.password)
-        
+        found_user = User.query.filter_by(username=username).first()
         if (found_user == None):
             flash("Username not found", "info")
             return redirect(url_for("log_in"))
-        tpassword = found_user.password
-        if (tpassword != password) :
+        if (password != found_user.password) :
             flash("Wrong password", "info")
             return redirect(url_for("log_in"))
         session["user"] = username
@@ -68,7 +73,6 @@ def log_in():
         if (found_user == None):
             db.session.add(user)
             db.session.commit()
-        # flash("created")
         return redirect(url_for("dash_board"))
     if "user" in session:
         return redirect(url_for("dash_board"))
@@ -78,14 +82,10 @@ def log_in():
 @app.route('/signup', methods=["POST", "GET"])
 def sign_up():
     if (request.method == "POST"):
-        print(123)
         username = request.form["username"]
         password = request.form["password"]
         rpassword = request.form["rpassword"]
-        if (username == "" or password == "" or rpassword == "") :
-            flash("Please enter full of area", "info")
-            return redirect(url_for("sign_up"))
-        elif (password != rpassword):
+        if (password != rpassword):
             flash("Password doesn't match", "info")
             return redirect(url_for("sign_up"))
         found_user = User.query.filter_by(username=username).first()
@@ -100,6 +100,10 @@ def sign_up():
         flash(notification)
         return redirect(url_for("log_in"))
     return render_template('signup.html')
+
+@app.route('/test', methods=["POST", "GET"])
+def test():
+    return render_template('test.html')
 
 #Users Observing
 @app.route("/users")
@@ -126,16 +130,34 @@ def dash_board():
     else :
         return redirect(url_for("log_in"))
 
-#AI chatbot Page
+#General chat
 @socketio.on('message')
 def handle_message(message):
+    found_user = User.query.filter_by(username="admin").first()
+    found_user.chat = found_user.chat + "####" + message
+    print(found_user.chat.split("####"))
+    db.session.commit()
     print('Receive message : ' + message)
-    # print(get_message(message))
-    send(message, broadcast=True)
-    send(get_message(message), broadcast=True)
+    elem = message.split("$$$$")
+    found_user2 = User.query.filter_by(username=elem[0]).first()
+    elem.append(found_user2.avatar)
+    send(elem, broadcast=True)
 @app.route('/general_chat')
 def general_chat():
-    return render_template('general_chat.html')
+    found_user = User.query.filter_by(username="admin").first()
+    all_chat = found_user.chat.split("####")
+    all_chat2 = []
+    for i in range(1, len(all_chat)):
+        elem = all_chat[i].split("$$$$")
+        found_user2 = User.query.filter_by(username=elem[0]).first()
+        elem.append(found_user2.avatar)
+        print(elem)
+        all_chat2.append(elem)
+    if "user" in session:
+        name = session["user"]
+        return render_template('general_chat.html', user=name, all_chat=all_chat2)
+    else :
+        return redirect(url_for("log_in"))
 
 @app.route('/app')
 def emilia_chat():
@@ -145,8 +167,29 @@ def emilia_chat():
 def rem_chat():
     return render_template('rem_chat.html')
 
+@app.route('/settingup', methods=["POST","GET"])
+def setting_up():
+    name = session["user"]
+    found_user = User.query.filter_by(username=name).first()
+    if request.method == "POST":
+        avatar = request.files["new-avatar"]
+        filename = avatar.filename
+        arr = ["png", "jpg", "jpeg", "gif", "svg"]
+        if (filename == ''):
+            flash("Không có ảnh nào được gửi lên")
+            return redirect(url_for("setting_up"))
+        if (filename.split('.')[1] not in arr):
+            flash("File phải là hình ảnh có đuôi png, jpg, jpeg, gif, svg")
+        else :
+            filename = secure_filename(avatar.filename)
+            filename = name + '.' + avatar.filename.rsplit('.')[1]
+            avatar.save(os.path.join(current_app.config.get('UPLOAD_FOLDER'), filename))
+            found_user.avatar = filename
+            db.session.commit()
+    return render_template('setting_up.html', user = found_user.avatar)
+
 #Running website
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    socketio.run(app, host="localhost", debug=True)

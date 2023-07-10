@@ -1,0 +1,18 @@
+{% extends "base_chat.html" %}
+{% block title %}Emilia World{% endblock %}
+
+{% block content %}
+
+<img src="{{ url_for('static', filename='avatars/' + user)}}" width="300px" height="300px" style="border-radius: 50%;">
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="new-avatar">
+    <button type="submit">Send</button>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for m in messages %}
+                <P style="color: red">{{ m }}</P>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</form>
+{% endblock %}

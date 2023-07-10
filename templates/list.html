@@ -5,7 +5,7 @@
 <!-- <img style="width: 70%; height: auto;" src="{{ url_for('static', filename='bg6.jpg') }} "> -->
 
 {% for m in users %}
-    <P style="color: blue">{{m.username}} {{m.password}}</P>
+    <P style="color: blue">{{m.username}} {{m.password}} {{m.avatar}} {{ m.chat }}</P>
 {% endfor %} 
 
 {% endblock %}
