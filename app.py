@@ -1,17 +1,9 @@
 #Including libraries and modules
-from flask import *
-from datetime import timedelta
-from flask.helpers import flash
-from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO, send
-from werkzeug.utils import secure_filename
-from os import *
-import os
-import requests
-import json
-
-#Initing app and database connection
-db = SQLAlchemy()
+from module.lib import *
+from module.simsimi import get_simsimi_response
+from module.code_runner import *
+# from module.code_runner import *
+#Initing app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "2b3ifbf302f9nc1j2po1jewkajsd"
 app.config['UPLOAD_FOLDER'] = 'static/avatars'
@@ -19,7 +11,10 @@ app.config['MAX_CONTENT_LENGTH'] = 1024*1024*10
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///user.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.permanent_session_lifetime = timedelta(minutes=10)
+#Database connection
+db = SQLAlchemy()
 db.init_app(app)
+#SocketIO connection
 socketio = SocketIO(app, cors_allowed_origin="*")
 
 #Class of database 
@@ -34,21 +29,6 @@ class User(db.Model):
         self.password = password
         self.avatar = 'admin.jpg'
         self.chat = ''
-
-
-def get_simsimi_response(message):
-    headers = {
-        'Content-Type':'application/x-www-form-urlencoded',
-    }
-    API_ENDPOINT = 'https://api.simsimi.vn/v1/simtalk'
-    data = {
-        'text' : message,
-        'lc' : 'vn',
-        'key' : ''
-    }
-    res = requests.post(url = API_ENDPOINT, headers=headers, data=data)
-    json_text = json.loads(res.text)
-    return json_text['message']
 
 #Home Page
 @app.route('/', methods=["POST", "GET"])
@@ -101,9 +81,9 @@ def sign_up():
         return redirect(url_for("log_in"))
     return render_template('signup.html')
 
-@app.route('/test', methods=["POST", "GET"])
-def test():
-    return render_template('test.html')
+# @app.route('/test', methods=["POST", "GET"])
+# def test():
+#     return render_template('test.html')
 
 #Users Observing
 @app.route("/users")
@@ -111,11 +91,12 @@ def user_list():
     users = db.session.execute(db.select(User).order_by(User.username)).scalars()
     return render_template("list.html", users=users)
 
+#About us
 @app.route("/about")
 def about_us():
     return render_template('about.html')
 
-#Logging out in dashboard page
+#Logging out
 @app.route('/logout')
 def log_out():
     session.pop("user", None)
@@ -159,13 +140,39 @@ def general_chat():
     else :
         return redirect(url_for("log_in"))
 
-@app.route('/app')
+#Chat with emilia
+@app.route('/app', methods=["POST", "GET"])
 def emilia_chat():
-    return render_template('emilia_chat.html')
+    if "user" in session:
+        name = session["user"]
+        return render_template('emilia_chat.html', user=name)
+    else :
+        return redirect(url_for("log_in"))
+@app.route('/get_emilia_message', methods=["POST", "GET"])
+def get_emilia_message():
+    name = request.form.get('name')
+    message = request.form.get('msg')
+    found_user = User.query.filter_by(username="admin").first()
+    print(name)
+    return [get_simsimi_response(message), name, found_user.avatar]
+
 
 @app.route('/rem_chat')
 def rem_chat():
     return render_template('rem_chat.html')
+
+
+#Code Runner
+@app.route('/code_runner', methods=["POST", "GET"])
+def run():
+    return render_template('code_runner.html')
+@app.route('/runcode', methods=["POST", "GET"])
+def print_result():
+    language = request.form.get('language')
+    code = request.form.get('code')
+    input = request.form.get('input')
+    res = run_code(language, code, input)
+    return res 
 
 @app.route('/settingup', methods=["POST","GET"])
 def setting_up():
