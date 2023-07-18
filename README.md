@@ -1,9 +1,13 @@
-hosted site : https://emiliaworld.winky9116.repl.co/
+python -m venv .venv
 
-run pip install -r requirements.txt
+.\.venv\Scripts\activate
 
-run python app.py
+pip install --upgrade pip
 
-go to the localhost web site at flask
+pip install -r requirements.txt
 
-enjoy!!!
+python punkt.py
+
+train.py
+
+python app.py

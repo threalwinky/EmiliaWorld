@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post">
+        <select name="clear_obj">
+
+            {% for users in user_list %}
+                <!-- <p>users</p> -->
+                <option value="{{ users }}">{{ users }}</option>
+            {% endfor %}
+
+        </select>
+        <button type="submit">Clear</button>
+    </form>
+</body>
+</html>

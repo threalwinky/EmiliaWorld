@@ -1,0 +1,173 @@
+{
+  "intents": [
+    {
+      "tag": "chao hoi",
+      "patterns": [
+        "Chao ban",
+        "Chao em",
+        "Hello",
+        "Hi ban",
+        "Chao em iu cua anh",
+        "Chao co be",
+        "Hello bro"
+      ],
+      "responses": [
+        "Chào bạn, mình là Emilia.",
+        "Hê lu, mình là Emilia.",
+        "Hi bạn, mình là Emilia.",
+        "Mình là Emilia, hân hạnh được gặp bạn."
+      ]
+    },
+    {
+      "tag": "tam biet",
+      "patterns": [
+        "Tam biet", 
+        "Hen gap lai", 
+        "Chao tam biet, hen gap lai",
+        "Good bye",
+        "Bye",
+        "See you again"
+      ],
+      "responses": [
+        "Tạm biệt bạn :3.",
+        "Bye! Nhớ gặp mình ngày mai nha."
+      ]
+    },
+    {
+      "tag": "cam on",
+      "patterns": ["Cam on", "Cam on ban rat nhieu", "Quao", "Wow", "That tuyet voi"],
+      "responses": [
+        "Không có gì hihi :3",
+        "Mình thật vui khi giúp bạn"
+      ]
+    },
+    {
+      "tag": "tong thong my",
+      "patterns": [
+        "Ai la tong thong my hien tai",
+        "Cho minh hoi ai la tong thong my hien nay",
+        "Tong thong my la ai",
+        "Who is the president of the USA"
+      ],
+      "responses": [
+        "Tổng thống mỹ hiện tại là {ttm} nhe",
+        "{ttm} đang là tổng thống mỹ"
+      ]
+    },
+    {
+      "tag": "thoi gian",
+      "patterns": [
+        "Bay gio la may gio",
+        "Cho minh hoi may gio roi",
+        "May gio roi ban",
+        "What time is it now"
+      ],
+      "responses": [
+        "Bây giờ là {hour} giờ, {minute} phút, {second} giây",
+        "{hour} giờ, {minute} phút rùi"
+      ]
+    },
+    {
+      "tag": "truyen cuoi",
+      "patterns": [
+        "Ke mot cau truyen cuoi di",
+        "Muon nghe truyen cuoi",
+        "Truyen cuoi",
+        "Do you know a joke?"
+      ],
+      "responses": [
+        "Tôi: Hôm qua tôi đi vào một cửa hàng và thấy một người đang cố gắng mở một chai nước khoáng rất lâu. Tôi đến gần và hỏi anh ấy: \"Cần giúp đỡ gì không?\" Anh ấy cười và nói: \"Cảm ơn, tôi chỉ đang đọc hướng dẫn sử dụng chai này, nó bị viết bằng tiếng Anh nên tôi đang cố gắng dịch!\"",
+        "Tôi: Vào một ngày đẹp trời, một ông già đi vào một quán cà phê và gọi một cốc cà phê. Khi nhận cốc cà phê, ông ta đặt một cục đường ngọt vào miệng, nhưng trái ngược với dự định, ông đã vô tình nuốt cục đường nguyên vẹn. Ông già ngạc nhiên nói với bồi bàn: \"Tôi vừa nuốt một cục đường nguyên vẹn, liệu có gì xảy ra không?\"\nBồi bàn trả lời: \"Đừng lo, ông ạ. Chỉ cần ông đặt một cái chai nước phía sau lưng và chờ đến lúc cần thiết, đường sẽ tan và ông sẽ có ly cà phê ngọt như ý ngay thôi!\""
+      ]
+    },
+    {
+      "tag": "truyen dark",
+      "patterns": [
+        "Ke mot cau truyen dark di",
+        "Muon nghe truyen dark",
+        "Mot cau chuyen dark thi sao",
+        "Dark thi sao"
+      ],
+      "responses": [
+        "Con gì không thể đứng ? Con bò",
+        "Bray mất bi gọi là gì ? BGay"
+      ]
+    },
+    {
+      "tag": "nguoi yeu",
+      "patterns": [
+        "Lam sao de co nguoi yeu",
+        "Muon co nguoi yeu qua"
+      ],
+      "responses": [
+        "Yêu tui nè",
+        "Yêu bản thân mình trước đã",
+        "Gái gú là phù du thoi"
+      ]
+    },
+    {
+      "tag": "Emilia",
+      "patterns": [
+        "Emilia la ai",
+        "Emilia co ngoai hinh ra sao",
+        "Emilia nhu the nao"
+      ],
+      "responses": [
+        "Emilia xuất hiện trong Re:Zero. Là một cô gái với nửa dòng máu yêu tinh - bán yêu. Cô là một trong những người được ứng cử để trở thành quốc vương tiếp theo. Emilia có ngoại hình thu hút, mái tóc dài bạch kim, làn da trắng nõn, dáng người cân đối, thon thả, đôi mắt tím long lanh."
+      ]
+    },
+    {
+      "tag": "Rem",
+      "patterns": [
+        "Rem la ai",
+        "Rem co ngoai hinh ra sao",
+        "Rem nhu the nao"
+      ],
+      "responses": [
+        "Rem xuất hiện trong Re:Zero.  có mái tóc màu xanh da trời và mang dòng máu oni(quỷ). Cô có một sừng, thứ đem lại sức mạnh. Là người làm việc tại dinh thự, khả năng nấu ăn của Rem tốt hơn chị mình."
+      ]
+    },
+    {
+      "tag": "Ram",
+      "patterns": [
+        "Ram la ai",
+        "Ram co ngoai hinh ra sao",
+        "Ram nhu the nao"
+      ],
+      "responses": [
+        "Ram xuất hiện trong Re:Zero. Chị gái song sinh của Rem, có mái tóc hồng và cũng mang dòng máu oni(quỷ).  Ram có tính cách lạnh lùng hơn nhiều so với Rem, quyết đoán hơn, mạnh mẽ hơn, nhưng luôn luôn yêu thương em gái mình. Ram làm công việc dọn dẹp và giặt quần áo trong biệt thự. Ram có tình cảm và mối quan hệ đặc biệt với ông chủ của mình, Roswaal."
+      ]
+    },
+    {
+      "tag": "Subaru",
+      "patterns": [
+        "Subaru la ai",
+        "Subaru co ngoai hinh ra sao",
+        "Subaru nhu the nao"
+      ],
+      "responses": [
+        "Subaru xuất hiện trong Re:Zero. Subaru thỉnh thoảng có tập thể dục và dường như biết cách chiến đấu bằng tay không, khiến cậu không hoàn toàn yếu. Cậu cũng có một chút năng lực phép thuật bóng tối, nhưng chỉ ở cấp độ rất cơ bản. Trong Arc 4 của bản web novel, cùng với việc ký kết với Beatrice, Subaru cũng được học parkour và cách dùng roi làm vũ khí trong vài tháng, khiến cậu mạnh hơn."
+      ]
+    },
+    {
+      "tag": "An gi chua",
+      "patterns": [
+        "An gi chua",
+        "Ban an gi chua"
+      ],
+      "responses": [
+        "Chưa ăn gì cả muốn được bao ăn gke :3"
+      ]
+    },
+    {
+      "tag": "THPT",
+      "patterns": [
+        "Chung nao thi THPT quoc gia",
+        "Thi THPT quoc gia ngay nao"
+      ],
+      "responses": [
+        "{time_interval}"
+      ]
+    }
+  ]
+}

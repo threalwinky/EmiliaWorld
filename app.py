@@ -1,6 +1,7 @@
 #Including libraries and modules
 from module.lib import *
-from module.simsimi import get_simsimi_response
+from module.emilia import *
+from module.ram import *
 from module.code_runner import *
 # from module.code_runner import *
 #Initing app
@@ -87,9 +88,9 @@ def sign_up():
 
 #Users Observing
 @app.route("/users")
-def user_list():
-    users = db.session.execute(db.select(User).order_by(User.username)).scalars()
-    return render_template("list.html", users=users)
+def users():
+    user_list = db.session.execute(db.select(User).order_by(User.username)).scalars()
+    return render_template("list.html", users=user_list)
 
 #About us
 @app.route("/about")
@@ -152,15 +153,25 @@ def emilia_chat():
 def get_emilia_message():
     name = request.form.get('name')
     message = request.form.get('msg')
-    found_user = User.query.filter_by(username="admin").first()
+    found_user = User.query.filter_by(username=name).first()
     print(name)
-    return [get_simsimi_response(message), name, found_user.avatar]
+    return [get_emilia_response(unidecode.unidecode(message)), name, found_user.avatar]
 
-
-@app.route('/rem_chat')
-def rem_chat():
-    return render_template('rem_chat.html')
-
+#Chat with Ram
+@app.route('/ram_chat', methods=["POST", "GET"])
+def ram_chat():
+    if "user" in session:
+        name = session["user"]
+        return render_template('ram_chat.html', user=name)
+    else :
+        return redirect(url_for("log_in"))
+@app.route('/get_ram_message', methods=["POST", "GET"])
+def get_ram_message():
+    name = request.form.get('name')
+    message = request.form.get('msg')
+    found_user = User.query.filter_by(username=name).first()
+    print(name)
+    return [get_ram_response(message), name, found_user.avatar]
 
 #Code Runner
 @app.route('/code_runner', methods=["POST", "GET"])
@@ -174,6 +185,38 @@ def print_result():
     res = run_code(language, code, input)
     return res 
 
+#Storing media
+@app.route('/store_media', methods=["POST","GET"])
+def store_media():
+    name = session["user"]
+    found_user = User.query.filter_by(username=name).first()
+    media_url = found_user.chat
+    if request.method == "POST":
+        media = request.files["new-media"]
+        filename = media.filename
+        arr = ["png", "jpg", "jpeg", "gif", "svg"]
+        if (filename == ''):
+            flash("Không có ảnh nào được gửi lên")
+            return redirect(url_for("store_media"))
+        if (filename.split('.')[1] not in arr):
+            flash("File phải là hình ảnh có đuôi png, jpg, jpeg, gif, svg")
+            return redirect(url_for("store_media"))
+        else :
+            filename = secure_filename(media.filename)
+            storeFolder = 'static/store'
+            if not os.path.exists(os.path.join(storeFolder, name)):
+                os.makedirs(os.path.join(storeFolder, name))
+            media.save(os.path.join(storeFolder+ '/' +name, filename))
+            found_user.chat = found_user.chat + '$$$$' + filename
+            db.session.commit()
+        return redirect(url_for("store_media"))
+    media_url = media_url.split('$$$$')
+    real_media_url = []
+    for i in range(1, len(media_url)):
+        real_media_url.append(media_url[i])
+    return render_template('store_media.html', media_url = real_media_url, user = name)
+
+#Setting up
 @app.route('/settingup', methods=["POST","GET"])
 def setting_up():
     name = session["user"]
@@ -187,6 +230,7 @@ def setting_up():
             return redirect(url_for("setting_up"))
         if (filename.split('.')[1] not in arr):
             flash("File phải là hình ảnh có đuôi png, jpg, jpeg, gif, svg")
+            return redirect(url_for("setting_up"))
         else :
             filename = secure_filename(avatar.filename)
             filename = name + '.' + avatar.filename.rsplit('.')[1]
@@ -194,6 +238,19 @@ def setting_up():
             found_user.avatar = filename
             db.session.commit()
     return render_template('setting_up.html', user = found_user.avatar)
+
+@app.route('/clear_db', methods=["POST", "GET"])
+def clear_db():
+    user_list = db.session.execute(db.select(User.username).order_by(User.username)).scalars()
+    if request.method == "POST":
+        clear_user = request.form['clear_obj']
+        found_user = User.query.filter_by(username=clear_user).first()
+        found_user.chat = ''
+        db.session.commit()
+        storeFolder = 'static/store'
+        if os.path.exists(os.path.join(storeFolder, clear_user)):
+            shutil.rmtree(os.path.join(storeFolder, clear_user))
+    return render_template('clear_db.html', user_list=user_list)
 
 #Running website
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
-#include<bits/stdc++.h>
-using namespace std;
+#include<stdio.h>
 int main(){
     int x;
-    cin >> x;
-    cout << x * x;
+    scanf("%d", &x);
+    printf("%d", x * x);
 }

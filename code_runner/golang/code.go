@@ -1,5 +1,5 @@
 package main
 import ("fmt")
 func main(){
-    fmt.Println(123 + 123);
+    fmt.Println(1234);
 }

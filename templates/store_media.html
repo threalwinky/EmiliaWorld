@@ -1,0 +1,22 @@
+{% extends "base_chat.html" %}
+{% block title %}Emilia World{% endblock %}
+
+{% block content %}
+
+<form method="post" enctype="multipart/form-data" style="text-align:  center;">
+    <input class="form-control" type="file" name="new-media" style="width: 500px; margin-left: 33%;">
+    <button class="btn btn-danger" type="submit" onClick="window.location.reload();">Add image</button>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for m in messages %}
+    <P style="color: red">{{ m }}</P>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+</form>
+<div>
+    {% for m in media_url %}
+    <img src="{{ url_for('static', filename='store/' + user + '/' + m)}}" width="500px">
+    {% endfor %}
+</div>
+{% endblock %}

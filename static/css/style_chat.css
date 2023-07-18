@@ -369,7 +369,7 @@ block:hover{
 .card{
 	height: 500px;
 	border-radius: 15px !important;
-	background-color: rgba(228, 164, 246, 0.4) !important;
+	background-color: rgba(228, 164, 246, 0.4);
   color: #000;
 }
 .contacts_body{
@@ -421,10 +421,14 @@ border-radius: 0 0 15px 15px !important;
 }
 .send_btn{
 	border-radius: 0 15px 15px 0 !important;
-	background-color: rgba(217, 2, 255, 0.3) !important;
+	background-color: rgba(217, 2, 255, 0.3);
 	border:0 !important;
 	color: rgb(0, 0, 0) !important;
 	cursor: pointer;
+  height: 60px;
+}
+.send_btn_record{
+  cursor: pointer;
   height: 60px;
 }
 .search_btn{
@@ -577,3 +581,4 @@ border-radius: 0 0 15px 15px !important;
 	margin-bottom: 15px !important;
 }
 }
+

@@ -2,11 +2,13 @@
 {% block title %}Emilia World{% endblock %}
 
 {% block content %}
-
-<img src="{{ url_for('static', filename='avatars/' + user)}}" width="300px" height="300px" style="border-radius: 50%;">
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="new-avatar">
-    <button type="submit">Send</button>
+<h1 style="text-align: center; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Change Avatar</h1>
+<img src="{{ url_for('static', filename='avatars/' + user)}}" width="300px" height="300px" style="border-radius: 50%; margin-left: 40%;">
+<br>
+<form method="post" enctype="multipart/form-data" style="text-align:  center;">
+    <br>
+    <input class="form-control" type="file" name="new-avatar" style="width: 500px; margin-left: 33%;">
+    <button class="btn btn-danger"  type="submit">Send</button>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for m in messages %}

@@ -1,4 +1,8 @@
 Flask
 Flask-SQLAlchemy
-transformers
+Flask-SocketIO
+nltk
 torch
+numpy
+unidecode
+requests
